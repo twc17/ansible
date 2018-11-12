@@ -1,0 +1,53 @@
+---
+- hosts: all
+  remote_user: root
+  gather_facts: True
+  tasks:
+  - name: Install some lovely packages
+    yum:
+      name: "{{ packages }}"
+    vars:
+      packages:
+      - nmap
+      - sysstat
+      - lsof
+      - vim
+      - cifs-utils
+      - kernel-devel
+      - gcc
+      - bind-utils
+      - telnet
+      - sssd
+      - openssl
+      - rsync
+      - curl
+      - wget
+      - git
+      - ipmitool
+  - name: Disable SELinux
+    selinux:
+      state: disabled
+  - name: Configure LDAP
+    block:
+      - copy:
+          src: files/ldap.conf
+          dest: /etc/openldap/ldap.conf
+          owner: root
+          group: root
+          mode: 0644
+      - file:
+          path: /etc/openldap/cacerts
+          state: directory
+          mode: 0755
+      - copy:
+          src: files/ca-bundle.crt
+          dest: /etc/openldap/cacerts/ca-bundle.crt
+          owner: root
+          group: root
+          mode: 0644
+      - copy:
+          src: files/sam-ldap-prod-01.cssd.pitt.edu.crt
+          dest: /etc/openldap/cacerts/sam-ldap-prod-01.cssd.pitt.edu.crt
+          owner: root
+          group: root
+          mode: 0644
