@@ -51,3 +51,11 @@
           owner: root
           group: root
           mode: 0644
+  - name: Configure SSSD
+    copy:
+      src: files/sssd.conf
+      dest: /etc/sssd/sssd.conf
+      owner: root
+      group: root
+      mode: 0600
+
