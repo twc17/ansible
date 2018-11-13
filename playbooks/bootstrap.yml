@@ -24,6 +24,7 @@
       - wget
       - git
       - ipmitool
+      - tree
   - name: Disable SELinux
     selinux:
       state: disabled
@@ -58,4 +59,27 @@
       owner: root
       group: root
       mode: 0600
+  - name: Configure nsswitch file
+    copy:
+      src: files/nsswitch.conf
+      dest: /etc/nsswitch.conf
+      owner: root
+      group: root
+      mode: 0644
+  - name: Configure system-auth PAM
+    copy:
+      src: files/system-auth-ac
+      dest: /etc/pam.d/system-auth-ac
+      owner: root
+      group: root
+      mode: 0644
+  - name: Configure password-auth PAM
+    copy:
+      src: files/password-auth-ac
+      dest: /etc/pam.d/password-auth-ac
+      owner: root
+      group: root
+      mode: 0644
+
+
 
