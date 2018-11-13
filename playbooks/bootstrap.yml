@@ -103,7 +103,13 @@
       name: sssd
       state: started
       enabled: yes
-
-
+  - name: Add CRC/CSSD admins to sudoers file
+    copy:
+      content: '%sam_frank_admins_posix ALL=(ALL)       ALL'
+      dest: /etc/sudoers.d/crc_cssd_admins
+      owner: root
+      group: root
+      mode: 0640
+      validate: /usr/sbin/visudo -cf %s
 
 
