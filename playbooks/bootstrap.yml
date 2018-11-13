@@ -88,6 +88,11 @@
       owner: root
       group: root
       mode: 0644
+  - name: Make sure network service is enabled and running
+    systemd:
+      name: network
+      state: started
+      enabled: yes
   - name: Stop and disable firewalld
     systemd:
       name: firewalld
