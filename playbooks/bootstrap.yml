@@ -52,6 +52,14 @@
           owner: root
           group: root
           mode: 0644
+      - file:
+          src: /etc/openldap/cacerts/sam-ldap-prod-01.cssd.pitt.edu.crt
+          path: /etc/openldap/cacerts/60a5f7b9.0
+          state: link
+      - file:
+          src: /etc/openldap/cacerts/ca-bundle.crt
+          path: /etc/openldap/cacerts/81914c19.0
+          state: link
   - name: Configure SSSD
     copy:
       src: files/sssd.conf
