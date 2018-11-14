@@ -1,8 +1,21 @@
 ---
 - hosts: all
-  remote_user: root
   gather_facts: True
   tasks:
+  - name: Install RPM-GPG-KEY-EPEL-7 gpg key
+    copy:
+      src: files/RPM-GPG-KEY-EPEL-7
+      dest: /etc/pki/rpm-gpg/RPM-GPG-KEY-EPEL-7
+      owner: root
+      group: root
+      mode: 0644
+  - name : Add EPEL 7 Repo
+    copy:
+      src: files/epel.repo
+      dest: /etc/yum.repos.d/epel.repo
+      owner: root
+      group: root
+      mode: 0644
   - name: Install some lovely packages
     yum:
       name: "{{ packages }}"
@@ -117,4 +130,5 @@
       mode: 0640
       validate: /usr/sbin/visudo -cf %s
 
-
+# TODO
+# See what utils are needed to mount nfs... warewulf and train-warewulf doesn't have cifs-utils installed and ihome works fine
