@@ -138,6 +138,15 @@
       state: mounted
     when: ansible_facts['domain'] == "crc.pitt.edu" or
           ansible_facts['domain'] == "sam.pitt.edu"
+  - name: Mount zfs1
+    mount:
+      path: /zfs1
+      src: 10.201.2.178:/zfs
+      fstype: nfs
+      opts: vers=4,_netdev
+      state: mounted
+    when: ansible_facts['domain'] == "crc.pitt.edu" or
+          ansible_facts['domain'] == "sam.pitt.edu"
 
 # TODO
 # See what utils are needed to mount nfs... warewulf and train-warewulf doesn't have cifs-utils installed and ihome works fine
