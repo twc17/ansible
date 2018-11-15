@@ -109,7 +109,7 @@
     group: root
     mode: 0640
     validate: /usr/sbin/visudo -cf %s
-- name: Configure NTP
+- name: Configure chronyd
   copy:
     src: chrony.conf
     dest: /etc/chrony.conf
