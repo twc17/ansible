@@ -16,25 +16,6 @@
 - name: Install some lovely packages
   yum:
     name: "{{ packages }}"
-  vars:
-    packages:
-    - nmap
-    - sysstat
-    - lsof
-    - vim
-    - cifs-utils
-    - kernel-devel
-    - gcc
-    - bind-utils
-    - telnet
-    - sssd
-    - openssl
-    - rsync
-    - curl
-    - wget
-    - git
-    - ipmitool
-    - tree
 - name: Disable SELinux
   selinux:
     state: disabled
