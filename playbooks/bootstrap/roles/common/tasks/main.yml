@@ -1,14 +1,14 @@
 ---  
 - name: Install RPM-GPG-KEY-EPEL-7 gpg key
   copy:
-    src: files/RPM-GPG-KEY-EPEL-7
+    src: RPM-GPG-KEY-EPEL-7
     dest: /etc/pki/rpm-gpg/RPM-GPG-KEY-EPEL-7
     owner: root
     group: root
     mode: 0644
 - name : Add EPEL 7 Repo
   copy:
-    src: files/epel.repo
+    src: epel.repo
     dest: /etc/yum.repos.d/epel.repo
     owner: root
     group: root
@@ -22,7 +22,7 @@
 - name: Configure LDAP
   block:
     - copy:
-        src: files/ldap.conf
+        src: ldap.conf
         dest: /etc/openldap/ldap.conf
         owner: root
         group: root
@@ -32,13 +32,13 @@
         state: directory
         mode: 0755
     - copy:
-        src: files/ca-bundle.crt
+        src: ca-bundle.crt
         dest: /etc/openldap/cacerts/ca-bundle.crt
         owner: root
         group: root
         mode: 0644
     - copy:
-        src: files/sam-ldap-prod-01.cssd.pitt.edu.crt
+        src: sam-ldap-prod-01.cssd.pitt.edu.crt
         dest: /etc/openldap/cacerts/sam-ldap-prod-01.cssd.pitt.edu.crt
         owner: root
         group: root
@@ -53,28 +53,30 @@
         state: link
 - name: Configure SSSD
   copy:
-    src: files/sssd.conf
+    src: sssd.conf
     dest: /etc/sssd/sssd.conf
     owner: root
     group: root
     mode: 0600
+  notify:
+    - restart sssd
 - name: Configure nsswitch file
   copy:
-    src: files/nsswitch.conf
+    src: nsswitch.conf
     dest: /etc/nsswitch.conf
     owner: root
     group: root
     mode: 0644
 - name: Configure system-auth PAM
   copy:
-    src: files/system-auth-ac
+    src: system-auth-ac
     dest: /etc/pam.d/system-auth-ac
     owner: root
     group: root
     mode: 0644
 - name: Configure password-auth PAM
   copy:
-    src: files/password-auth-ac
+    src: password-auth-ac
     dest: /etc/pam.d/password-auth-ac
     owner: root
     group: root
@@ -107,6 +109,15 @@
     group: root
     mode: 0640
     validate: /usr/sbin/visudo -cf %s
+- name: Configure NTP
+  copy:
+    src: chrony.conf
+    dest: /etc/chrony.conf
+    owner: root
+    group: root
+    mode: 0644
+  notify:
+    - restart chrony
 - name: Mount ihome
   mount:
     path: /ihome
