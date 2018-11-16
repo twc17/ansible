@@ -1,0 +1,8 @@
+---
+- name: Add BeeGFS 7.0 client repo
+  copy:
+    src: beegfs-rhel7.repo
+    dest: /etc/yum.repos.d/beegfs-rhel7.repo
+    owner: root
+    group: root
+    mode: 0644
