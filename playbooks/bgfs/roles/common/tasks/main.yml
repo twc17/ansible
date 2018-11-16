@@ -6,3 +6,9 @@
     owner: root
     group: root
     mode: 0644
+- name: Install packages required for BeeGFS
+  yum:
+    name: "{{ required_packages }}"
+- name: Install BeeGFS packages
+  yum:
+    name: "{{ bgfs_packages }}"

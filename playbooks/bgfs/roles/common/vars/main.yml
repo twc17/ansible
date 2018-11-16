@@ -1,0 +1,8 @@
+required_packages:
+- kernel-devel
+- gcc
+
+bgfs_packages:
+- beegfs-client
+- beegfs-helperd
+- beegfs-utils
