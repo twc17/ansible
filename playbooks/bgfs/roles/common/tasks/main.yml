@@ -12,3 +12,6 @@
 - name: Install BeeGFS packages
   yum:
     name: "{{ bgfs_packages }}"
+- name: Initialize or update the beegfs-client config file 
+  command: /opt/beegfs/sbin/beegfs-setup-client -m 10.201.0.219
+    
