@@ -6,12 +6,15 @@
     owner: root
     group: root
     mode: 0644
+
 - name: Install packages required for BeeGFS
   yum:
     name: "{{ required_packages }}"
+
 - name: Install BeeGFS packages
   yum:
     name: "{{ bgfs_packages }}"
+
 - name: Copy over initial BeeGFS client config file
   copy:
     src: beegfs-client.conf
@@ -19,6 +22,7 @@
     owner: root
     group: root
     mode: 0644
+
 - name: Set BeeGFS mount point to /bgfs
   copy:
     content: '/bgfs /etc/beegfs/beegfs-client.conf'
@@ -26,6 +30,16 @@
     owner: root
     group: root
     mode: 0644
+
+- name: Apply connection filter file for eth only connected clients
+  copy:
+    src: client-networks.conf
+    dest: /etc/beegfs/client-networks.conf
+    owner: root
+    group: root
+    mode: 0644
+  when: ansible_facts['interfaces']|join(' ') is not search('ib0')
+
 - name: Set client autobuild parameters
   copy:
     src: beegfs-client-autobuild.conf
@@ -33,3 +47,6 @@
     owner: root
     group: root
     mode: 0644
+
+- name: Build the client kernel module
+  command: /etc/init.d/beegfs-client rebuild
