@@ -12,6 +12,24 @@
 - name: Install BeeGFS packages
   yum:
     name: "{{ bgfs_packages }}"
-- name: Initialize or update the beegfs-client config file 
-  command: /opt/beegfs/sbin/beegfs-setup-client -m 10.201.0.219
-    
+- name: Copy over initial BeeGFS client config file
+  copy:
+    src: beegfs-client.conf
+    dest: /etc/beegfs/beegfs-client.conf
+    owner: root
+    group: root
+    mode: 0644
+- name: Set BeeGFS mount point to /bgfs
+  copy:
+    content: '/bgfs /etc/beegfs/beegfs-client.conf'
+    dest: /etc/beegfs/beegfs-mounts.conf
+    owner: root
+    group: root
+    mode: 0644
+- name: Set client autobuild parameters
+  copy:
+    src: beegfs-client-autobuild.conf
+    dest: /etc/beegfs/beegfs-client-autobuild.conf
+    owner: root
+    group: root
+    mode: 0644
