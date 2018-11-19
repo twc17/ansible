@@ -3,6 +3,7 @@
   systemd:
     name: chronyd
     state: restarted
+
 - name: restart sssd
   systemd:
     name: sssd

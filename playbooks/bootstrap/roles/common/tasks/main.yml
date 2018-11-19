@@ -6,6 +6,7 @@
     owner: root
     group: root
     mode: 0644
+
 - name : Add EPEL 7 Repo
   copy:
     src: epel.repo
@@ -13,12 +14,15 @@
     owner: root
     group: root
     mode: 0644
+
 - name: Install some lovely packages
   yum:
     name: "{{ packages }}"
+
 - name: Disable SELinux
   selinux:
     state: disabled
+
 - name: Configure LDAP
   block:
     - copy:
@@ -51,6 +55,7 @@
         src: /etc/openldap/cacerts/ca-bundle.crt
         path: /etc/openldap/cacerts/81914c19.0
         state: link
+
 - name: Configure SSSD
   copy:
     src: sssd.conf
@@ -60,6 +65,7 @@
     mode: 0600
   notify:
     - restart sssd
+
 - name: Configure nsswitch file
   copy:
     src: nsswitch.conf
@@ -67,6 +73,7 @@
     owner: root
     group: root
     mode: 0644
+
 - name: Configure system-auth PAM
   copy:
     src: system-auth-ac
@@ -74,6 +81,7 @@
     owner: root
     group: root
     mode: 0644
+
 - name: Configure password-auth PAM
   copy:
     src: password-auth-ac
@@ -81,26 +89,31 @@
     owner: root
     group: root
     mode: 0644
+
 - name: Make sure network service is enabled and running
   systemd:
     name: network
     state: started
     enabled: yes
+
 - name: Stop and disable firewalld
   systemd:
     name: firewalld
     state: stopped
     enabled: no
+
 - name: Stop and disable NetworkManager
   systemd:
     name: NetworkManager
     state: stopped
     enabled: no
+
 - name: Start and enable SSSD
   systemd:
     name: sssd
     state: started
     enabled: yes
+
 - name: Add CRC/CSSD admins to sudoers file
   copy:
     content: '%sam_frank_admins_posix ALL=(ALL)       ALL'
@@ -109,6 +122,7 @@
     group: root
     mode: 0640
     validate: /usr/sbin/visudo -cf %s
+
 - name: Configure chronyd
   copy:
     src: chrony.conf
@@ -118,6 +132,7 @@
     mode: 0644
   notify:
     - restart chrony
+
 - name: Mount ihome
   mount:
     path: /ihome
@@ -127,6 +142,7 @@
     state: mounted
   when: ansible_facts['domain'] == "crc.pitt.edu" or
         ansible_facts['domain'] == "sam.pitt.edu"
+
 - name: Mount zfs1
   mount:
     path: /zfs1
