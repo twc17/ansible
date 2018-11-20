@@ -69,6 +69,22 @@
     - ansible_facts['ib0']['ipv4']['address'] is search('10.203.*') or
       ansible_facts['ib0']['ipv4_secondaries']['address'] is search('10.203.*')
 
+- name: OPA specific client tuning settings
+  block:
+    - name: Set connRDMABufNum variable for OPA clients
+      lineinfile:
+        path: /etc/beegfs/beegfs-client.conf
+        regexp: '^connRDMABufNum'
+        line: 'connRDMABufNum                = 12'
+    - name: Set connRDMABufSize variable for OPA clients
+      lineinfile:
+        path: /etc/beegfs/beegfs-client.conf
+        regexp: '^connRDMABufSize'
+        line: 'connRDMABufSize               = 65536'
+  when:
+    - ansible_facts['interfaces']|join(' ') is search('ib0')
+    - ansible_facts['ib0']['ipv4']['address'] is search('10.204.*') or
+
 - name: Set client autobuild parameters
   copy:
     src: beegfs-client-autobuild.conf
@@ -76,6 +92,5 @@
     owner: root
     group: root
     mode: 0644
-
-- name: Build the client kernel module
-  command: /etc/init.d/beegfs-client rebuild
+  notify:
+    - rebuild client module
