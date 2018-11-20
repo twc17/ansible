@@ -35,7 +35,7 @@
   block:
     - name: Configure connection filter file for ETH only clients
       copy:
-        content: '10.201.0.0/16'
+        content: "10.201.0.0/16\n"
         dest: /etc/beegfs/client-networks.conf
         owner: root
         group: root
@@ -51,7 +51,7 @@
   block:
     - name: Configure connection filter file for IB connected clients
       copy:
-        content: '10.203.0.0/16'
+        content: "10.203.0.0/16\n"
         dest: /etc/beegfs/client-networks.conf
         owner: root
         group: root
