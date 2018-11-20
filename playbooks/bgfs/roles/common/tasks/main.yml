@@ -33,12 +33,24 @@
 
 - name: Apply connection filter file for eth only connected clients
   copy:
-    src: client-networks.conf
+    content: '10.201.0.0/16'
     dest: /etc/beegfs/client-networks.conf
     owner: root
     group: root
     mode: 0644
   when: ansible_facts['interfaces']|join(' ') is not search('ib0')
+
+- name: Apply connection filter file for IB connected clients
+  copy:
+    content: '10.203.0.0/16'
+    dest: /etc/beegfs/client-networks.conf
+    owner: root
+    group: root
+    mode: 0644
+  when:
+    - ansible_facts['interfaces']|join(' ') is search('ib0')
+    - ansible_facts['ib0']['ipv4']['address'] is search('10.203.*') or
+      ansible_facts['ib0']['ipv4_secondaries']['address'] is search('10.203.*')
 
 - name: Set client autobuild parameters
   copy:
