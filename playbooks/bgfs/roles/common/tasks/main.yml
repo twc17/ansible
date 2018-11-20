@@ -32,21 +32,35 @@
     mode: 0644
 
 - name: Apply connection filter file for eth only connected clients
-  copy:
-    content: '10.201.0.0/16'
-    dest: /etc/beegfs/client-networks.conf
-    owner: root
-    group: root
-    mode: 0644
+  block:
+    - name: Configure connection filter file for ETH only clients
+      copy:
+        content: '10.201.0.0/16'
+        dest: /etc/beegfs/client-networks.conf
+        owner: root
+        group: root
+        mode: 0644
+    - name: Apply the connection filter file for ETH only clients
+      lineinfile:
+        path: /etc/beegfs/beegfs-client.conf
+        regexp: '^connNetFilterFile'
+        line: 'connNetFilterFile             = /etc/beegfs/client-networks.conf'
   when: ansible_facts['interfaces']|join(' ') is not search('ib0')
 
 - name: Apply connection filter file for IB connected clients
-  copy:
-    content: '10.203.0.0/16'
-    dest: /etc/beegfs/client-networks.conf
-    owner: root
-    group: root
-    mode: 0644
+  block:
+    - name: Configure connection filter file for IB connected clients
+      copy:
+        content: '10.203.0.0/16'
+        dest: /etc/beegfs/client-networks.conf
+        owner: root
+        group: root
+        mode: 0644
+    - name: Apply the connection filter file for IB connected clients
+      lineinfile:
+        path: /etc/beegfs/beegfs-client.conf
+        regexp: '^connNetFilterFile'
+        line: 'connNetFilterFile             = /etc/beegfs/client-networks.conf'
   when:
     - ansible_facts['interfaces']|join(' ') is search('ib0')
     - ansible_facts['ib0']['ipv4']['address'] is search('10.203.*') or
@@ -94,3 +108,15 @@
     mode: 0644
   notify:
     - rebuild client module
+
+- name: Start and enable beegfs-helperd service
+  systemd:
+    name: beegfs-helperd
+    state: started
+    enabled: yes
+
+- name: Start and enable beegfs-client service which will mount BeeGFS
+  systemd:
+    name: beegfs-client
+    state: started
+    enabled: yes
