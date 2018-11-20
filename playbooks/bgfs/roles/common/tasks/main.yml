@@ -54,11 +54,13 @@
 
 - name: IB specific client tuning settings
   block:
-    - lineinfile:
+    - name: Set connRDMABufNum variable for IB clients
+      lineinfile:
         path: /etc/beegfs/beegfs-client.conf
         regexp: '^connRDMABufNum'
         line: 'connRDMABufNum                = 22'
-    - lineinfile:
+    - name: Set connRDMABufSize variable for IB clients
+      lineinfile:
         path: /etc/beegfs/beegfs-client.conf
         regexp: '^connRDMABufSize'
         line: 'connRDMABufSize               = 32768'
