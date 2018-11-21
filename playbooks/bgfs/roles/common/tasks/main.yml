@@ -159,13 +159,13 @@
     - restart beegfs-client
 
 - name: Start and enable beegfs-helperd service
-  systemd:
+  service:
     name: beegfs-helperd
     state: started
     enabled: yes
 
 - name: Start and enable beegfs-client service which will mount BeeGFS
-  systemd:
+  service:
     name: beegfs-client
     state: started
     enabled: yes
