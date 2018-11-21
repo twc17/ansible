@@ -44,6 +44,8 @@
     owner: root
     group: root
     mode: 0644
+  notify:
+    - restart beegfs-client
 
 - name: Apply connection filter file for eth only connected clients
   block:
@@ -59,6 +61,8 @@
         path: /etc/beegfs/beegfs-client.conf
         regexp: '^connNetFilterFile'
         line: 'connNetFilterFile             = /etc/beegfs/client-networks.conf'
+      notify:
+        - restart beegfs-client
   when: ansible_facts['interfaces']|join(' ') is not search('ib0')
 
 - name: Apply connection filter file for IB connected clients

@@ -1,6 +1,8 @@
 ---
 - name: rebuild client module
   command: /etc/init.d/beegfs-client rebuild
+  notify:
+    - restart beegfs-client
 
 - name: restart beegfs-client
   systemd:
