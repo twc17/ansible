@@ -145,7 +145,7 @@
         - restart beegfs-client
   when:
     - ansible_facts['interfaces']|join(' ') is search('ib0')
-    - ansible_facts['ib0']['ipv4']['address'] is search('10.204.*') or
+    - ansible_facts['ib0']['ipv4']['address'] is search('10.204.*')
 
 - name: Set client autobuild parameters
   copy:
