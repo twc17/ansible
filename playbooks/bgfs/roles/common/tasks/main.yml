@@ -1,11 +1,25 @@
 ---
-- name: Add BeeGFS 7.0 client repo
+- name: Add BeeGFS 7.0 client repo for RHEL 7
   copy:
     src: beegfs-rhel7.repo
     dest: /etc/yum.repos.d/beegfs-rhel7.repo
     owner: root
     group: root
     mode: 0644
+  when:
+    - ansible_facts['distribution'] == "RedHat"
+    - ansible_facts['distribution_major_version'] == "7"
+
+- name: Add BeeGFS 7.0 client repo for RHEL 6
+  copy:
+    src: beegfs-rhel6.repo
+    dest: /etc/yum.repos.d/beegfs-rhel6.repo
+    owner: root
+    group: root
+    mode: 0644
+  when:
+    - ansible_facts['distribution'] == "RedHat"
+    - ansible_facts['distribution_major_version'] == "6"
 
 - name: Install packages required for BeeGFS
   yum:
