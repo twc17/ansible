@@ -29,6 +29,14 @@
   yum:
     name: "{{ bgfs_packages }}"
 
+- name: Configure IP address for management server
+  lineinfile:
+    path: /etc/beegfs/beegfs-client.conf
+    regexp: '^sysMgmtdHost'
+    line: 'sysMgmtdHost                  = 10.201.0.219'
+  notify:
+    - restart beegfs-client
+
 - name: Enable quota tracking
   lineinfile:
     path: /etc/beegfs/beegfs-client.conf
