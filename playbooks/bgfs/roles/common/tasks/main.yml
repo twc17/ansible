@@ -102,7 +102,8 @@
   when:
     - ansible_facts['interfaces']|join(' ') is search('ib0')
     - ansible_facts['ib0']['ipv4']['address'] is search('10.203.*') or
-      ansible_facts['ib0']['ipv4_secondaries']['address'] is search('10.203.*')
+      (ansible_facts['ib0']|join(' ') is search('ipv4_secondaries') and 
+      ansible_facts['ib0']['ipv4_secondaries']['address'] is search('10.203.*'))
 
 - name: IB specific client tuning settings
   block:
@@ -123,7 +124,8 @@
   when:
     - ansible_facts['interfaces']|join(' ') is search('ib0')
     - ansible_facts['ib0']['ipv4']['address'] is search('10.203.*') or
-      ansible_facts['ib0']['ipv4_secondaries']['address'] is search('10.203.*')
+      (ansible_facts['ib0']|join(' ') is search('ipv4_secondaries') and 
+      ansible_facts['ib0']['ipv4_secondaries']['address'] is search('10.203.*'))
 
 - name: OPA specific client tuning settings
   block:
