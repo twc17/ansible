@@ -29,13 +29,29 @@
   yum:
     name: "{{ bgfs_packages }}"
 
-- name: Copy over initial BeeGFS client config file
-  copy:
-    src: beegfs-client.conf
-    dest: /etc/beegfs/beegfs-client.conf
-    owner: root
-    group: root
-    mode: 0644
+- name: Enable quota tracking
+  lineinfile:
+    path: /etc/beegfs/beegfs-client.conf
+    regexp: '^quotaEnabled'
+    line: 'quotaEnabled                  = true'
+  notify:
+    - restart beegfs-client
+
+- name: Enable extended file attributes
+  lineinfile:
+    path: /etc/beegfs/beegfs-client.conf
+    regexp: '^sysXAttrsEnabled'
+    line: 'sysXAttrsEnabled              = true'
+  notify:
+    - restart beegfs-client
+
+- name: Enable ACLs
+  lineinfile:
+    path: /etc/beegfs/beegfs-client.conf
+    regexp: '^sysACLsEnabled'
+    line: 'sysACLsEnabled                = true'
+  notify:
+    - restart beegfs-client
 
 - name: Set BeeGFS mount point to /bgfs
   copy:
@@ -79,6 +95,8 @@
         path: /etc/beegfs/beegfs-client.conf
         regexp: '^connNetFilterFile'
         line: 'connNetFilterFile             = /etc/beegfs/client-networks.conf'
+      notify:
+        - restart beegfs-client
   when:
     - ansible_facts['interfaces']|join(' ') is search('ib0')
     - ansible_facts['ib0']['ipv4']['address'] is search('10.203.*') or
@@ -91,11 +109,15 @@
         path: /etc/beegfs/beegfs-client.conf
         regexp: '^connRDMABufNum'
         line: 'connRDMABufNum                = 22'
+      notify:
+        - restart beegfs-client
     - name: Set connRDMABufSize variable for IB clients
       lineinfile:
         path: /etc/beegfs/beegfs-client.conf
         regexp: '^connRDMABufSize'
         line: 'connRDMABufSize               = 32768'
+      notify:
+        - restart beegfs-client
   when:
     - ansible_facts['interfaces']|join(' ') is search('ib0')
     - ansible_facts['ib0']['ipv4']['address'] is search('10.203.*') or
@@ -108,11 +130,15 @@
         path: /etc/beegfs/beegfs-client.conf
         regexp: '^connRDMABufNum'
         line: 'connRDMABufNum                = 12'
+      notify:
+        - restart beegfs-client
     - name: Set connRDMABufSize variable for OPA clients
       lineinfile:
         path: /etc/beegfs/beegfs-client.conf
         regexp: '^connRDMABufSize'
         line: 'connRDMABufSize               = 65536'
+      notify:
+        - restart beegfs-client
   when:
     - ansible_facts['interfaces']|join(' ') is search('ib0')
     - ansible_facts['ib0']['ipv4']['address'] is search('10.204.*') or
@@ -126,6 +152,7 @@
     mode: 0644
   notify:
     - rebuild client module
+    - restart beegfs-client
 
 - name: Start and enable beegfs-helperd service
   systemd:
