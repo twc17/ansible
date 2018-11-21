@@ -42,6 +42,7 @@
     path: /etc/beegfs/beegfs-client.conf
     regexp: '^sysXAttrsEnabled'
     line: 'sysXAttrsEnabled              = true'
+  when: ansible_facts['kernel'] is version('3.0', '>=')
   notify:
     - restart beegfs-client
 
@@ -50,6 +51,7 @@
     path: /etc/beegfs/beegfs-client.conf
     regexp: '^sysACLsEnabled'
     line: 'sysACLsEnabled                = true'
+  when: ansible_facts['kernel'] is version('3.0', '>=')
   notify:
     - restart beegfs-client
 
