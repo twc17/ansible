@@ -3,6 +3,6 @@
   command: /etc/init.d/beegfs-client rebuild
 
 - name: restart beegfs-client
-  systemd:
+  service:
     name: beegfs-client
     state: restarted
