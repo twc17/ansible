@@ -4,11 +4,13 @@
     name: prometheus
     comment: Prometheus node_exporter account
     shell: /sbin/nologin
+    create_home: no
     system: yes
 
 - name: Install 'node_exporter' binary
   copy:
     src: node_exporter
+    dest: /usr/bin/node_exporter
     owner: prometheus
     group: prometheus
     mode: 0755
