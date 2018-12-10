@@ -1,0 +1,32 @@
+---
+- name: Create the 'Prometheus' user system account
+  user:
+    name: prometheus
+    comment: Prometheus node_exporter account
+    shell: /sbin/nologin
+    system: yes
+
+- name: Install 'node_exporter' binary
+  copy:
+    src: node_exporter
+    owner: prometheus
+    group: prometheus
+    mode: 0755
+  notify:
+    - restart node_exporter
+
+- name: Configure 'node_exporter.service'
+  copy:
+    src: node_exporter.service
+    dest: /etc/systemd/system/node_exporter.service
+    owner: root
+    group: root
+    mode: 0644
+  notify:
+    - restart node_exporter
+
+- name: Start and enable the 'node_exporter' service
+  service:
+    name: node_exporter
+    state: started
+    enabled: yes
